@@ -1,0 +1,1 @@
+export const MONGO_CONNECTION = "mongodb+srv://nestuser:yourpassword@your-mongo-db-url?retryWrites=true&w=majority"
