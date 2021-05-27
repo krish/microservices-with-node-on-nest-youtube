@@ -4,6 +4,8 @@ import { Model } from "mongoose";
 import { EmployeeCreateDto } from "../dto/EmployeeCreate.dto";
 import { Employee, EmployeeDocument } from "../schemas/Employee.schema";
 import * as mongoose from 'mongoose'
+import { EmployeeSearchDto } from "../dto/EmployeeSearch.dto";
+import { EmployeeUpdateDto } from "../dto/EmployeeUpdate.dto";
 
 
 @Injectable()
@@ -19,6 +21,23 @@ export class EmployeeRepository {
 
     async findAll(): Promise<Employee[]> {
         return await this.employeeModel.find();
+    }
+    async findOne(id: string): Promise<Employee> {
+        return await this.employeeModel.findOne({ _id: id })
+    }
+    async findWithFilters(filter: EmployeeSearchDto) {
+        let name = Object.is(filter.name, undefined) ? '' : filter.name
+        let designation = Object.is(filter.designation, undefined) ? '' : filter.designation
+        return await this.employeeModel.find({ $and: [{ designation: { $regex: designation } }, { firstName: { $regex: name } }] })
+
+    }
+    async update(employee: EmployeeUpdateDto): Promise<Employee> {
+
+        return await this.employeeModel.findOneAndUpdate({ _id: employee.id },
+            { nearestCity: employee.city }, {
+            new: true
+        })
+
     }
     async delete(id: string): Promise<boolean> {
         let objId = mongoose.Types.ObjectId(id)

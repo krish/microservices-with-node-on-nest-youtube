@@ -12,10 +12,7 @@ import { EmployeeRepository } from '../repository/employee.repository';
 export class EmployeesService {
 
 
-    constructor(private employeeRepository: EmployeeRepository) {
-
-    }
-
+    constructor(private employeeRepository: EmployeeRepository) { }
 
     async getAll(): Promise<Employee[]> {
         return await this.employeeRepository.findAll();
@@ -26,35 +23,22 @@ export class EmployeesService {
     }
 
 
-    /* employeeSearch(employeeSearchDto: EmployeeSearchDto) {
-        const { status, name } = employeeSearchDto;
-        let employees = this.getAllEmployees();
-        if (status) {
-            employees = employees.filter(employee => employee.status === status);
-            //   console.log(employees)
-        }
-        if (name) {
-            employees = employees.filter(employee => employee.firstName.includes(name) || employee.lastName.includes(name))
-            console.log(employees)
-        }
-        return employees;
+    employeeSearch(employeeSearchDto: EmployeeSearchDto) {
+        return this.employeeRepository.findWithFilters(employeeSearchDto);
     }
- */
-    /*     getEmployeeById(id: string): Employee {
-            const employees = this.getAllEmployees();
-            let employee = employees.find(employee => employee.id === id)
-            if (!employee) {
-                throw new NotFoundException(`${id} ${Messages.EMPLOYEE_NOT_EXSIST}`)
-            }
-            return employee
-        } */
-    /*   updateEmployee(employeeUpdatedto: EmployeeUpdateDto): Employee {
-  
-          const { id, city } = employeeUpdatedto;
-          let employee = this.getEmployeeById(id)
-          employee.nearestCity = city
-          return employee;
-      } */
+
+    getEmployeeById(id: string): Promise<Employee> {
+
+        let employee = this.employeeRepository.findOne(id)
+        if (!employee) {
+            throw new NotFoundException(`${id} ${Messages.EMPLOYEE_NOT_EXSIST}`)
+        }
+        return employee
+    }
+    updateEmployee(employeeUpdatedto: EmployeeUpdateDto): Promise<Employee> {
+
+        return this.employeeRepository.update(employeeUpdatedto)
+    }
 
     async delete(id: string): Promise<boolean> {
 

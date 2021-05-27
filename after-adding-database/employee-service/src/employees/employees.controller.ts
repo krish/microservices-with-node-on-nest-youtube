@@ -17,13 +17,11 @@ export class EmployeesController {
     @Get()
     @UsePipes(ValidationPipe)
     async getAllEmployees(@Query() param: EmployeeSearchDto): Promise<Employee[]> {
-        /*  if (Object.keys(param).length) {
-             return this.employeeService.employeeSearch(param)
-         } else {
-             return this.employeeService.getAllEmployees()
-         } */
-        return await this.employeeService.getAll();
-
+        if (Object.keys(param).length) {
+            return this.employeeService.employeeSearch(param)
+        } else {
+            return this.employeeService.getAll()
+        }
     }
 
     @Post()
@@ -32,24 +30,23 @@ export class EmployeesController {
     createEmployee(@Body() employeeCreateDto: EmployeeCreateDto): Promise<Employee> {
         return this.employeeService.create(employeeCreateDto)
     }
-    /* @Get('/:id')
-    getEmployeeById(@Param('id') id: string): Employee {
+    @Get('/:id')
+    getEmployeeById(@Param('id') id: string): Promise<Employee> {
 
         return this.employeeService.getEmployeeById(id)
     }
 
     @Put('/:id/city')
-    updateEmployee(@Param('id') id: string, @Body() employeeUpdateDto: EmployeeUpdateDto): Employee {
+    updateEmployee(@Param('id') id: string, @Body() employeeUpdateDto: EmployeeUpdateDto): Promise<Employee> {
         employeeUpdateDto.id = id
         return this.employeeService.updateEmployee(employeeUpdateDto)
-    } */
+    }
     @Delete('/:id')
     @HttpCode(204)
-    deleteEmployee(@Param('id') id: string) {
-        let y = this.employeeService.delete(id);
-        console.log(y)
+    async deleteEmployee(@Param('id') id: string) {
+        let y = await this.employeeService.delete(id);
         if (!y) {
-            throw new NotFoundException('Record not found')
+            throw new NotFoundException('Record not found to delete')
         }
 
     }
