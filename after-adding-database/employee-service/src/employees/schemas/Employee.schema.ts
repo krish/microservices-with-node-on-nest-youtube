@@ -15,8 +15,6 @@ export type EmployeeDocument = Employee & Document;
 
 @Schema()
 export class Employee {
-    @Prop()
-    id: string
     @Prop({ required: true })
     firstName: string
     @Prop({ required: true })
