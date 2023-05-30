@@ -8,8 +8,6 @@ export type VehicleDocument = Vehicle & mongoose.Document
 export class Vehicle {
 
     @Prop()
-    id: string
-    @Prop()
     make: string
     @Prop()
     model: string
